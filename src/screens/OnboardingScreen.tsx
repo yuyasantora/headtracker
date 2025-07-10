@@ -5,12 +5,14 @@ import { useState } from "react"
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from "@expo/vector-icons"
+import { Picker } from "@react-native-picker/picker"
 
 interface UserProfile {
-  name: string
+  prefecture: string
   age: string
   gender: "male" | "female" | "other" | ""
   headacheFrequency: "daily" | "weekly" | "monthly" | "rarely" | ""
+
   pressureSensitivity: number // 1-5
   commonSymptoms: string[]
   triggers: string[]
@@ -24,7 +26,7 @@ interface OnboardingScreenProps {
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [profile, setProfile] = useState<UserProfile>({
-    name: "",
+    prefecture: "",
     age: "",
     gender: "",
     headacheFrequency: "",
@@ -38,6 +40,16 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
 
   const symptoms = ["頭痛", "めまい", "肩こり", "眠気", "関節痛", "だるさ", "吐き気", "耳鳴り"]
   const triggers = ["気圧変化", "天気の変化", "ストレス", "睡眠不足", "疲労", "生理周期", "食事", "アルコール"]
+  const prefectures = [
+    "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
+    "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
+    "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県",
+    "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県",
+    "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県",
+    "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県",
+    "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
+  ]
+
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
@@ -54,10 +66,6 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   }
 
   const handleComplete = () => {
-    if (!profile.name.trim()) {
-      Alert.alert("入力エラー", "お名前を入力してください。")
-      return
-    }
     onComplete(profile)
   }
 
@@ -100,13 +108,22 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
             <Text style={styles.stepSubtitle}>あなたの基本情報を教えてください</Text>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>お名前</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder="山田太郎"
-                value={profile.name}
-                onChangeText={(text) => setProfile((prev) => ({ ...prev, name: text }))}
-              />
+              <Text style={styles.inputLabel}>お住まいの都道府県</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={profile.prefecture}
+                  onValueChange={(itemValue) =>
+                    setProfile((prev) => ({ ...prev, prefecture: itemValue }))
+                  }
+                  style={styles.picker}
+                  itemStyle={styles.pickerItem}
+                >
+                  <Picker.Item label="選択してください" value="" />
+                  {prefectures.map((pref) => (
+                    <Picker.Item key={pref} label={pref} value={pref} />
+                  ))}
+                </Picker>
+              </View>
             </View>
 
             <View style={styles.inputContainer}>
@@ -119,7 +136,6 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
                 onChangeText={(text) => setProfile((prev) => ({ ...prev, age: text }))}
               />
             </View>
-
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>性別</Text>
               <View style={styles.genderContainer}>
@@ -422,6 +438,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  pickerContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  picker: {
+    color: "#333",
+    height: 50,
+  },
+  pickerItem: {
+    color: "#333",
   },
   genderContainer: {
     flexDirection: "row",

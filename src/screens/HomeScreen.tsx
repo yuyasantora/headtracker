@@ -8,13 +8,13 @@ import { Ionicons } from "@expo/vector-icons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import type { PressureData, WeatherForecast } from "../types"
-import { getCurrentPressure, getForecast } from "../services/weatherService"
+import { getCurrentPressure, getForecast, getUserLocation } from "../services/weatherService"
 import PressureCard from "../components/PressureCard"
 import ForecastList from "../components/ForecastList"
 import RiskIndicator from "../components/RiskIndicator"
 
 interface UserProfile {
-  name: string
+  prefecture: string
   age: string
   gender: "male" | "female" | "other" | ""
   headacheFrequency: "daily" | "weekly" | "monthly" | "rarely" | ""
@@ -48,13 +48,30 @@ const HomeScreen: React.FC = () => {
   }
 
   const loadData = async () => {
+    setLoading(true)
     try {
-      const [pressureData, forecastData] = await Promise.all([getCurrentPressure(), getForecast()])
+      // ユーザーの現在地を取得
+      const location = await getUserLocation()
+      if (!location) {
+        Alert.alert("エラー", "位置情報が取得できませんでした。")
+        setLoading(false)
+        return
+      }
+      
+      // 取得した位置情報を使ってAPIを呼び出す
+      const [pressureData, forecastData] = await Promise.all([
+        getCurrentPressure(location), 
+        getForecast(location),
+      ])
 
       setCurrentPressure(pressureData)
       setForecast(forecastData)
     } catch (error) {
-      Alert.alert("エラー", "データの取得に失敗しました")
+      if (error instanceof Error) {
+        Alert.alert("エラー", error.message)
+      } else {
+        Alert.alert("エラー", "データの取得に失敗しました")
+      }
     } finally {
       setLoading(false)
       setRefreshing(false)

@@ -11,11 +11,12 @@ import ChartScreen from "./src/screens/ChartScreen"
 import RecordScreen from "./src/screens/RecordScreen"
 import SettingsScreen from "./src/screens/SettingsScreen"
 import OnboardingScreen from "./src/screens/OnboardingScreen"
+import MatchingScreen from "./src/screens/MatchingScreen"
 
 const Tab = createBottomTabNavigator()
 
 interface UserProfile {
-  name: string
+  prefecture: string
   age: number
   gender: "male" | "female" | "other"| ""
   headacheFrequency: "daily" | "weekly" | "monthly" |
@@ -88,6 +89,8 @@ export default function App() {
               iconName = focused ? "add-circle" : "add-circle-outline"
             } else if (route.name === "Settings") {
               iconName = focused ? "settings" : "settings-outline"
+            } else if (route.name === "仲間") {
+              iconName = focused ? "people" : "people-outline"
             } else {
               iconName = "help-outline"
             }
@@ -109,6 +112,15 @@ export default function App() {
         <Tab.Screen name="Chart" component={ChartScreen} options={{ title: "グラフ" }} />
         <Tab.Screen name="Record" component={RecordScreen} options={{ title: "記録" }} />
         <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: "設定" }} />
+        <Tab.Screen
+          name="仲間"
+          component={MatchingScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="people-outline" color={color} size={size} />
+            ),
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   )
