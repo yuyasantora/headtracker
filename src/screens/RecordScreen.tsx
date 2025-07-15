@@ -11,7 +11,20 @@ const RecordScreen: React.FC = () => {
   const [selectedSymptoms, setSelectedSymptoms] = useState<SymptomType[]>([])
   const [notes, setNotes] = useState<string>("")
 
-  const symptoms: SymptomType[] = ["頭痛", "めまい", "肩こり", "眠気", "関節痛", "だるさ"]
+  const symptoms: SymptomType[] = [
+    "頭痛",
+    "めまい",
+    "肩こり",
+    "眠気",
+    "関節痛",
+    "だるさ",
+    "吐き気",
+    "耳鳴り",
+    "発熱",
+    "食欲不振",
+    "こり・関節痛",
+    "肌荒れ",
+  ]
 
   const severityLabels = ["なし", "軽微", "軽度", "中度", "重度", "激痛"]
   const severityColors = ["#E5E5EA", "#34C759", "#FFCC02", "#FF9500", "#FF6B35", "#FF3B30"]
