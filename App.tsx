@@ -11,7 +11,7 @@ import ChartScreen from "./src/screens/ChartScreen"
 import RecordScreen from "./src/screens/RecordScreen"
 import SettingsScreen from "./src/screens/SettingsScreen"
 import OnboardingScreen from "./src/screens/OnboardingScreen"
-import MatchingScreen from "./src/screens/MatchingScreen"
+import CommunityScreen from "./src/screens/CommunityScreen"
 
 const Tab = createBottomTabNavigator()
 
@@ -89,8 +89,8 @@ export default function App() {
               iconName = focused ? "add-circle" : "add-circle-outline"
             } else if (route.name === "Settings") {
               iconName = focused ? "settings" : "settings-outline"
-            } else if (route.name === "仲間") {
-              iconName = focused ? "people" : "people-outline"
+            } else if (route.name === "みんなの記録") {
+              iconName = focused ? "chatbubbles" : "chatbubbles-outline"
             } else {
               iconName = "help-outline"
             }
@@ -113,11 +113,13 @@ export default function App() {
         <Tab.Screen name="Record" component={RecordScreen} options={{ title: "記録" }} />
         <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: "設定" }} />
         <Tab.Screen
-          name="仲間"
-          component={MatchingScreen}
+          name="みんなの記録"
+          component={CommunityScreen}
           options={{
+            tabBarLabel: "みんな",
+            headerShown: false, // ヘッダーは画面側で実装
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="people-outline" color={color} size={size} />
+              <Ionicons name="chatbubbles-outline" color={color} size={size} />
             ),
           }}
         />
