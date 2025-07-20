@@ -4,13 +4,15 @@
 
 ## 🚀 セットアップ
 
-### 1. 新しいExpoプロジェクトを作成
+### 1. フロントエンド (React Native)
+
+#### 1.1. 新しいExpoプロジェクトを作成
 \`\`\`bash
 npx create-expo-app HeadacheTracker --template blank-typescript
 cd HeadacheTracker
 \`\`\`
 
-### 2. 必要な依存関係をインストール
+#### 1.2. 必要な依存関係をインストール
 \`\`\`bash
 # ナビゲーション関連
 npm install @react-navigation/native @react-navigation/bottom-tabs
@@ -23,15 +25,62 @@ npx expo install expo-linear-gradient @expo/vector-icons
 npm install react-native-chart-kit react-native-svg
 \`\`\`
 
-### 3. ファイルを配置
+#### 1.3. ファイルを配置
 - ダウンロードしたファイルをプロジェクトに配置
 - `src/` フォルダ全体をプロジェクトルートにコピー
 - `App.tsx` を置き換え
 
-### 4. アプリを起動
+#### 1.4. アプリを起動
 \`\`\`bash
 npx expo start
 \`\`\`
+
+### 2. バックエンド (Rust/MySQL) ─ Ubuntu 22.04 例
+
+#### 2.1. Rust をインストール
+まだ Rust を入れていない場合は公式インストールスクリプトを実行します。
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+#### 2.2. MySQL サーバーをインストール
+```bash
+sudo apt update
+sudo apt install mysql-server
+```
+
+#### 2.3. MySQL の初期セキュリティ設定
+```bash
+sudo mysql_secure_installation
+```
+対話形式で `root` パスワード設定・匿名ユーザー削除などを行います。
+
+#### 2.4. データベース & ユーザー作成
+```bash
+sudo mysql -u root -p
+
+-- アプリ用 DB
+CREATE DATABASE my_app_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- アプリ専用ユーザー
+CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'secure_password';
+GRANT ALL PRIVILEGES ON my_app_db.* TO 'app_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+#### 2.5. 環境変数を設定
+`backend/.env` を作成し、以下を記述します（ユーザー名・パスワードは上記で設定したものに合わせてください）。
+```env
+DATABASE_URL="mysql://app_user:secure_password@localhost:3306/my_app_db"
+```
+
+#### 2.6. バックエンドサーバーを起動
+```bash
+cd backend
+cargo run
+```
+`listening on 127.0.0.1:3001` と表示されれば成功です。
 
 ## 📱 実行方法
 
